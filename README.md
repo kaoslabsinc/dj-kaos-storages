@@ -96,6 +96,82 @@ DEFAULT_FILE_STORAGE = PRIVATE_FILE_STORAGE
 MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{STORAGES_PRIVATE_MEDIA_LOCATION}/'
 ```
 
+## How to use both private and public media storage in a project
+
+It is possible to use both public and private media storage in a project. In order to do so, first decide which mode of
+storage is going to be the default one. We suggest if you are developing an internal facing application (such as a
+company dashboard) to use private media storage as the default. If you are developing a public facing application
+(i.e. a social network) to use public media storage as the default. In the case you need to store some file privately
+when the default is public (and vice versa) use the following method:
+
+```python
+# settings.py 
+STORAGES_PUBLIC_MEDIA_LOCATION = 'media'
+STORAGES_PRIVATE_MEDIA_LOCATION = 'private-media'
+PUBLIC_FILE_STORAGE = 'kaos_storages.s3.PublicMediaFilesS3Storage'
+PRIVATE_FILE_STORAGE = 'kaos_storages.s3.PrivateMediaFilesS3Storage'
+
+# default being public 
+DEFAULT_FILE_STORAGE = PUBLIC_FILE_STORAGE
+MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{STORAGES_PUBLIC_MEDIA_LOCATION}/'
+
+# default being private 
+DEFAULT_FILE_STORAGE = PRIVATE_FILE_STORAGE
+MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{STORAGES_PRIVATE_MEDIA_LOCATION}/'
+```
+
+In your django models, say the default is private storage, and you want some model's field's uploaded files to be
+public:
+
+```python
+from django.db import models
+from kaos_storages.s3 import PublicMediaFilesS3Storage
+
+
+# models.py
+class SomeModelWithPublicFileField(models.Model):
+    file = models.FileField(storage=PublicMediaFilesS3Storage)
+```
+
+Keep in mind, you might have different settings for your local and production environments. Most likely your local
+environment doesn't differentiate between public and private file uploads, and has no concept of S3 and
+`PublicMediaFilesS3Storage`.
+
+### `PublicFileField` and `PrivateFileField`
+
+For your convenience `dj-kaos-storages` comes with a number of `FileField` classes and mixins that abstracts the above
+that set the storage class of the field to class importable from the path described by `settings.PUBLIC_FILE_STORAGE`
+and `settings.PRIVATE_FILE_STORAGE` for public and private uploads, respectively. When `DEBUG=True` which signals a dev
+environment, `PUBLIC_FILE_STORAGE` and `PRIVATE_FILE_STORAGE` are set by default to
+`django.core.files.storage.FileSystemStorage`, which is the Django default. This way the helper classes such
+as `PublicFileField` and `PrivateFileField` will save to your filesystem in your local development environment.
+
+In the example above:
+
+```python
+from django.db import models
+from kaos_storages.fields import PublicFileField
+
+
+# models.py
+class SomeModelWithPublicFileField(models.Model):
+    file = PublicFileField()
+```
+
+Notice how we swapped the default `models.FileField` with `kaos_storages.fields.PublicFileField`.
+
+List of all fields available:
+
+- `PublicFileField`
+- `PrivateFileField`
+- `PublicImageField`
+- `PrivateImageField`
+
+There are also two mixins classes available, so you can create your own children of `FileField`:
+
+- `PublicFileFieldMixin`
+- `PrivateFileFieldMixin`
+
 ## Development and Testing
 
 ### IDE Setup
