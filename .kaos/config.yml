@@ -1,5 +1,5 @@
 name: dj-kaos-storages
-version: 0.1.0-dev3
+version: 0.1.0-rc1
 description: A set of django media storage classes for different use cases such as private file storage on S3
 
 repo_url: https://github.com/kaoslabsinc/dj-kaos-storages
