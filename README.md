@@ -24,9 +24,13 @@ STORAGES_PRIVATE_MEDIA_LOCATION = 'private-media'
 PUBLIC_FILE_STORAGE = 'kaos_storages.s3.PublicMediaFilesS3Storage'
 PRIVATE_FILE_STORAGE = 'kaos_storages.s3.PrivateMediaFilesS3Storage'
 
-# default being private
+# default storage is set to private, switch to PUBLIC_FILE_STORAGE for public default storage
 DEFAULT_FILE_STORAGE = PRIVATE_FILE_STORAGE
-MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{STORAGES_PRIVATE_MEDIA_LOCATION}/'
+
+if DEFAULT_FILE_STORAGE == PRIVATE_FILE_STORAGE:
+    MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{STORAGES_PRIVATE_MEDIA_LOCATION}/'
+if DEFAULT_FILE_STORAGE == PUBLIC_FILE_STORAGE:
+    MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{STORAGES_PUBLIC_MEDIA_LOCATION}/'
 ```
 
 Now if somebody goes to the url `https://your-bucket.s3.amazonaws.com/private-media/path/to/your/file`, they would get a
