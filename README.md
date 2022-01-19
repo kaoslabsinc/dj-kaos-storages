@@ -24,9 +24,13 @@ STORAGES_PRIVATE_MEDIA_LOCATION = 'private-media'
 PUBLIC_FILE_STORAGE = 'kaos_storages.s3.PublicMediaFilesS3Storage'
 PRIVATE_FILE_STORAGE = 'kaos_storages.s3.PrivateMediaFilesS3Storage'
 
-# default being private
+# default storage is set to private, switch to PUBLIC_FILE_STORAGE for public default storage
 DEFAULT_FILE_STORAGE = PRIVATE_FILE_STORAGE
-MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{STORAGES_PRIVATE_MEDIA_LOCATION}/'
+
+if DEFAULT_FILE_STORAGE == PRIVATE_FILE_STORAGE:
+    MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{STORAGES_PRIVATE_MEDIA_LOCATION}/'
+if DEFAULT_FILE_STORAGE == PUBLIC_FILE_STORAGE:
+    MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{STORAGES_PUBLIC_MEDIA_LOCATION}/'
 ```
 
 Now if somebody goes to the url `https://your-bucket.s3.amazonaws.com/private-media/path/to/your/file`, they would get a
@@ -143,8 +147,10 @@ For your convenience `dj-kaos-storages` comes with a number of `FileField` class
 that set the storage class of the field to class importable from the path described by `settings.PUBLIC_FILE_STORAGE`
 and `settings.PRIVATE_FILE_STORAGE` for public and private uploads, respectively. When `DEBUG=True` which signals a dev
 environment, `PUBLIC_FILE_STORAGE` and `PRIVATE_FILE_STORAGE` are set by default to
-`django.core.files.storage.FileSystemStorage`, which is the Django default. This way the helper classes such
-as `PublicFileField` and `PrivateFileField` will save to your filesystem in your local development environment.
+`django.core.files.storage.FileSystemStorage`, which is the Django default. If your environment has
+set `PUBLIC_FILE_STORAGE` and `PRIVATE_FILE_STORAGE` they are respected and won't be overridden (e.g. you turn
+on `DEBUG = True` in a staging environment). This way the helper classes such as `PublicFileField`
+and `PrivateFileField` will save to your filesystem in your local development environment.
 
 In the example above:
 
