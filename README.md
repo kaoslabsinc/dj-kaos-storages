@@ -48,7 +48,9 @@ is better to store such files on a storage service such as S3. This package is a
 ### Public vs Private media files
 
 If you want media files to be only accessible through your application, and want to prevent users to put in the url in
-their browsers and access the files, you'd want to use a private media file storage.
+their browsers and access the files, you'd want to use a private media file storage. For example your application might
+generate confidential PDF report files that you want to only be accessible through your dashboard and not using a
+publicly available URL.
 
 ## AWS S3
 
