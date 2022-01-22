@@ -52,15 +52,15 @@ their browsers and access the files, you'd want to use a private media file stor
 
 ## AWS S3
 
-dj-kaos-storage comes with 3 classes to handle external storage on Amazon S3. All the following classes require to add
-necessary settings for `django-storages`. Refer to `django-storages`'s
+dj-kaos-storage comes with 3 classes to handle external storage on Amazon S3. All the following classes require adding
+the necessary settings for `django-storages`. Refer to `django-storages`'s
 [documentation](https://django-storages.readthedocs.io/en/latest/) for more details.
 
 ```python
-AWS_ACCESS_KEY_ID = env('DJANGO_AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = env('DJANGO_AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = env('DJANGO_AWS_STORAGE_BUCKET_NAME')
-AWS_S3_REGION_NAME = env('DJANGO_AWS_S3_REGION_NAME', default=None)
+AWS_ACCESS_KEY_ID = os.environ['DJANGO_AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = os.environ['DJANGO_AWS_SECRET_ACCESS_KEY']
+AWS_STORAGE_BUCKET_NAME = os.environ['DJANGO_AWS_STORAGE_BUCKET_NAME']
+AWS_S3_REGION_NAME = os.environ.get('DJANGO_AWS_S3_REGION_NAME', None)
 ```
 
 ### `StaticFilesS3Storage`
