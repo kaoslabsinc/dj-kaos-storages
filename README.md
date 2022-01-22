@@ -147,10 +147,10 @@ For your convenience `dj-kaos-storages` comes with a number of `FileField` class
 that set the storage class of the field to class importable from the path described by `settings.PUBLIC_FILE_STORAGE`
 and `settings.PRIVATE_FILE_STORAGE` for public and private uploads, respectively. When `DEBUG=True` which signals a dev
 environment, `PUBLIC_FILE_STORAGE` and `PRIVATE_FILE_STORAGE` are set by default to
-`django.core.files.storage.FileSystemStorage`, which is the Django default. If your environment has
-set `PUBLIC_FILE_STORAGE` and `PRIVATE_FILE_STORAGE` they are respected and won't be overridden (e.g. you turn
-on `DEBUG = True` in a staging environment). This way the helper classes such as `PublicFileField`
-and `PrivateFileField` will save to your filesystem in your local development environment.
+`django.core.files.storage.FileSystemStorage`, which is the Django default. This way the helper classes such
+as `PublicFileField` and `PrivateFileField` will save to your filesystem in your local development environment. If your
+settings has set `PUBLIC_FILE_STORAGE` and/or `PRIVATE_FILE_STORAGE` they are respected and won't be overridden (e.g.
+you turn on `DEBUG = True` in a staging environment).
 
 In the example above:
 
