@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -122,9 +123,24 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 MEDIA_ROOT = str(BASE_DIR / 'media')
-MEDIA_URL = '/media/'
+# MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+AWS_ACCESS_KEY_ID = os.environ['DJANGO_AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = os.environ['DJANGO_AWS_SECRET_ACCESS_KEY']
+AWS_STORAGE_BUCKET_NAME = os.environ['DJANGO_AWS_STORAGE_BUCKET_NAME']
+AWS_S3_REGION_NAME = os.environ.get('DJANGO_AWS_S3_REGION_NAME', None)
+
+STORAGES_PUBLIC_MEDIA_LOCATION = 'media'
+STORAGES_PRIVATE_MEDIA_LOCATION = 'private-media'
+PUBLIC_FILE_STORAGE = 'kaos_storages.s3.PublicMediaFilesS3Storage'
+PRIVATE_FILE_STORAGE = 'kaos_storages.s3.PrivateMediaFilesS3Storage'
+
+# default being private
+DEFAULT_FILE_STORAGE = PRIVATE_FILE_STORAGE
+MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/{STORAGES_PRIVATE_MEDIA_LOCATION}/'
