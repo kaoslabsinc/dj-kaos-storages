@@ -54,7 +54,6 @@ def test_PrivateImageField():
 
 def test_default_public_file_storage(settings):
     settings.DEFAULT_FILE_STORAGE = 'kaos_storages.s3.PublicMediaFilesS3Storage'
-    delattr(settings, 'PUBLIC_FILE_STORAGE')
 
     field = models.FileField()
     _assert_is_public(field)
@@ -62,7 +61,6 @@ def test_default_public_file_storage(settings):
 
 def test_default_private_file_storage(settings):
     settings.DEFAULT_FILE_STORAGE = 'kaos_storages.s3.PrivateMediaFilesS3Storage'
-    delattr(settings, 'PRIVATE_FILE_STORAGE')
 
     field = models.FileField()
     _assert_is_private(field)
